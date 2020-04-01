@@ -1,0 +1,219 @@
+\usepackage{minted}
+
+\defverbatim[colored]\abba{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   autogobble
+                   ]{pycon}
+    >>> a = 1
+    >>> b = 1
+    >>> a, b = b, a
+    \end{minted}
+}
+
+
+\defverbatim[colored]\AstropyUnits{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   autogobble
+                   ]{pycon}
+    >>> from astropy import units as u
+    >>> distance = 44 * u.imperial.mile
+    >>> time = 30 * u.minute
+    >>> distance / time
+    <Quantity 88.0 mi / h>
+    >>> (distance/time).to(u.m/u.s)
+    <Quantity 39.33952 m / s>
+    >>> (1.21 * u.GW).cgs
+    <Quantity 1.21e+16 erg / s>
+    >>> 2 * u.m / u.s + 4 * u.m / u.s ** 2
+    UnitConversionError: Can only apply 'add' function to quantities
+    with compatible dimensions
+    \end{minted}
+}
+
+\defverbatim[colored]\keV{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{pycon}
+    >>> kT = 1.2 * units.keV
+    >>> kT.to(u.K, equivalencies=u.temperature_energy())
+    <Quantity 13925426.47248121 K>
+    \end{minted}
+}
+
+\defverbatim[colored]\atomic{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{pycon}
+    >>> from plasmapy.atomic import *
+    
+    >>> alpha = Particle("He-4++")
+    >>> alpha.mass
+    <Quantity 6.64465709e-27 kg>
+    >>> electron = Particle("e-")
+    >>> electron.charge
+    <Quantity -1.60217662e-19 C>
+    >>> electron.is_category(require={"lepton", "fermion"})
+    True
+    >>> ~electron  # find antiparticle with invert operator
+    Particle("e+")
+    \end{minted}
+}
+
+\defverbatim[colored]\nuclearreactionenergy{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{pycon}
+    >>> nuclear_reaction_energy("D + T -> alpha + n").to('MeV')
+    <Quantity 17.58932778 MeV>
+    \end{minted}
+}
+
+\defverbatim[colored]\mathematics{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{pycon}
+    >>> from plasmapy.mathematics import *
+    
+    >>> plasma_dispesion_func(0.4 - 0.6j)
+    (-2.2969520508628873+2.9148177319960276j)
+    
+    >>> plasma_dispersion_func_deriv(-1.52+0.47j)
+    (0.16587133149822897+0.44587978805935047j)
+    
+    >>> Fermi_integral(1, 1)
+    (1.8062860704447743-0j)
+    \end{minted}
+}
+
+\defverbatim[colored]\physics{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{pycon}
+    >>> from plasmapy.physics import *
+    
+    >>> Debye_length(n_e = 1e15 * u.m ** -3, T_e = 6e6 * u.K)
+    <Quantity 0.00534541 m>
+    
+    >>> inertial_length(5e19 * u.m ** -3, particle='D+')
+    <Quantity 0.04553085 m>
+    
+    >>> upper_hybrid_frequency(0.2 * u.T, n_e = 5e19 * u.m ** -3)
+    <Quantity 4.00459419e+11 rad / s>
+
+    >>> B = 2 * u.T
+    >>> species = ['e-', 'D+']
+    >>> n = [1e18 * u.m ** -3, 1e18 * u.m ** -3]
+    >>> omega = 3.7e9 * (2 * pi) * (u.rad / u.s)
+    >>> L, R, P = cold_plasma_permittivity_LRP(B, species, n, omega)
+    >>> L
+    <Quantity 0.63333549>
+    >>> R
+    <Quantity 1.41512254>
+    >>> P
+    <Quantity -4.8903104>
+    \end{minted}
+}
+
+\defverbatim[colored]\classicaltransport{
+    \begin{minted}[fontsize=\scriptsize,
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{pycon}
+    >>> from plasmapy.transport import *
+    >>> T = 1 * u.MK
+    >>> n = 5e15 * u.m ** -3
+    >>> particles = ('e-', 'p+')
+    >>> collision_frequency(T, n, particles)
+    <Quantity 443.02775451 Hz>
+    >>> coupling_parameter(T, n, particles)
+    <Quantity 4.60608476e-06>
+
+    >>> T_e, n_e = 0.6 * u.keV, 1e16 * u.cm ** -3
+    >>> T_p, n_p = 0.8 * u.keV, 1e16 * u.cm ** -3
+    >>> braginskii = ClassicalTransport(T_e, n_e, T_p, n_p, 'p+')
+    >>> braginskii.ion_thermal_conductivity()
+    <Quantity 132961.01785222 W / (K m)>
+    >>> braginskii.electron_viscosity() # Eq 2.25-2.27 in Braginskii (1965) 
+    <Quantity [0.02734206, 0.02733305, 0.02733305, 0., 0.] Pa s>
+
+    \end{minted}
+}
+
+\defverbatim[colored]\docstringA{
+    \begin{minted}[fontsize=\tiny, 
+                   framesep=3mm,
+                   style=emacs,
+                   autogobble
+                   ]{python3}
+def plasma_dispersion_func(zeta):
+    r"""Calculate the plasma dispersion function
+
+    Parameters
+    ----------
+    zeta : complex, float, ndarray, or Quantity
+        Argument of plasma dispersion function.
+
+    Returns
+    -------
+    Z : complex, float, or ndarray
+        Value of plasma dispersion function.
+
+    Raises
+    ------
+    TypeError
+        If the argument is invalid.
+    UnitsError
+        If the argument is a Quantity but is
+        not dimensionless
+    ValueError
+        If the argument is not entirely finite
+
+    Notes
+    -----
+    The plasma dispersion function is defined as:
+    
+    .. math::
+    
+    Z(\zeta) = \sqrt{\pi}\int_{-\infty}^{+\infty}dx
+               \frac{e^{-x^2}}{x-\zeta}
+
+    where the argument is a complex number
+    [fried.conte-1961].
+
+    In plasma wave theory, the plasma dispersion
+    function appears frequently when the
+    background medium has a Maxwellian distribution
+    function.  The argument of this function then
+    refers to the ratio of a wave's phase velocity
+    to a thermal velocity.
+
+    References
+    ----------
+    .. [fried.conte-1961]
+    Fried, Burton D. and Samuel D. Conte. 1961.
+    The Plasma Dispersion Function: The Hilbert
+    Transformation of the Gaussian. 
+
+    Examples
+    --------
+    >>> plasma_dispersion_func(1j)
+    0.75787215614131187j
+    >>> plasma_dispersion_func(-1.52+0.47j)
+    (0.60888889572342553+0.33494583882874029j)
+    """
+\end{minted}
+}
+\end{document}
